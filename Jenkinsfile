@@ -12,7 +12,7 @@ pipeline {
     }
     environment { 
         packageVersion = ''
-        nexusURL = '172.31.5.95:8081' //Mention your Nexus Url
+        //nexusURL = '172.31.5.95:8081' //Mention your Nexus Url
     }
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -30,7 +30,7 @@ pipeline {
             }
         }
         stage('Install dependencies') {
-            steps {     //Shell commands in pipeline
+            steps {     //Shell commands in pipeline. To run the below command Node Js should be installed in agent.
                 sh """   
                     npm install  
                 """
