@@ -4,6 +4,7 @@
 //Stage-02 Install Dependencies 
 //Stage-03 Build i.e Zip all files(16_Jenkins_Catalogues) and create artifact
 //Stage-04 Push Artifact to Nexus Repo
+//Stage-05 Deploy. To pass the version & environmnet to the downstreat server.
 
 pipeline {
     agent {
@@ -65,17 +66,17 @@ pipeline {
                 )
             }
         }
-    //     stage('Deploy') {
-    //         steps {
-    //             script {
-    //                     def params = [
-    //                         string(name: 'version', value: "$packageVersion"),
-    //                         string(name: 'environment', value: "dev")
-    //                     ]
-    //                     build job: "catalogue-deploy", wait: true, parameters: params
-    //                 }
-    //         }
-    //     }
+        stage('Deploy') {
+            steps {
+                script {
+                        def params = [
+                            string(name: 'version', value: "$packageVersion"),
+                            string(name: 'environment', value: "dev")
+                        ]
+                        build job: "catalogue-deploy", wait: true, parameters: params //Build job is to pass version & environment to catalogue-downstream server.
+                    }
+            }
+        }
      }
     // post build
     post { 
