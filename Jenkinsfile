@@ -1,8 +1,9 @@
 //Angent should have Java,Terrafrom,Aws cli,node js
+//The below stages are for Continues Integration process
 //Stage-01 Get the version of the aplication.While doing the developments the application version will change (package.json file line no 3)
 //Stage-02 Install Dependencies 
-//Stage-03 Build i.e Zip all files(16_Jenkins_Catalogues ) and create artifact
-//Stage-04 
+//Stage-03 Build i.e Zip all files(16_Jenkins_Catalogues) and create artifact
+//Stage-04 Push Artifact to Nexus Repo
 
 pipeline {
     agent {
@@ -12,7 +13,7 @@ pipeline {
     }
     environment { 
         packageVersion = ''
-        //nexusURL = '172.31.5.95:8081' //Mention your Nexus Url
+        nexusURL = '172.31.80.58:8081' //Mention your Nexus Url
     }
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -36,7 +37,7 @@ pipeline {
                 """
             }
         }
-        stage('Build') {
+        stage('Build the zip file') {
             steps {   // zip is a linux command to zip the files -x to exclude the files while zipping, -q to hide the running log, it is unnecessary and waste of memory.
                 sh """
                     ls -la
@@ -45,25 +46,25 @@ pipeline {
                 """
             }
         }
-    //     stage('Publish Artifact') {
-    //         steps {
-    //              nexusArtifactUploader(
-    //                 nexusVersion: 'nexus3',
-    //                 protocol: 'http',
-    //                 nexusUrl: "${nexusURL}",
-    //                 groupId: 'com.roboshop',
-    //                 version: "${packageVersion}",
-    //                 repository: 'catalogue',
-    //                 credentialsId: 'nexus-auth',
-    //                 artifacts: [
-    //                     [artifactId: 'catalogue',
-    //                     classifier: '',
-    //                     file: 'catalogue.zip',
-    //                     type: 'zip']
-    //                 ]
-    //             )
-    //         }
-    //     }
+        stage('Publish Artifact to Nexus Repo') { //Nexus artifact uploader plugin should be installed.
+            steps {
+                 nexusArtifactUploader(
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: "${nexusURL}",
+                    groupId: 'com.roboshop',
+                    version: "${packageVersion}",
+                    repository: 'catalogue',
+                    credentialsId: 'Nexus_credentials', //Configure the Nexus credentials in jenkins
+                    artifacts: [
+                        [artifactId: 'catalogue',
+                        classifier: '',
+                        file: 'catalogue.zip',
+                        type: 'zip']
+                    ]
+                )
+            }
+        }
     //     stage('Deploy') {
     //         steps {
     //             script {
@@ -79,11 +80,11 @@ pipeline {
     // post build
     post { 
         always { 
-            echo 'I will always say Hello again!'
+            echo 'Deleting the workspace folder...!'
             deleteDir() //Once we create the zip file and store it nexus we have to delete the workspace folder.If not we face issue while running second time.
         }
         failure { 
-            echo 'this runs when pipeline is failed, used generally to send some alerts'
+            echo 'This runs when pipeline is failed, used generally to send some alerts'
         }
         success{
             echo 'I will say Hello when pipeline is success'
