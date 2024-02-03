@@ -13,7 +13,7 @@ const logger = pino({
 const expLogger = expPino({
     logger: logger
 });
-// imagine this as developer changing the code
+// imagine this as developer changing the code then he will update version and push the code then Jenkins will take the version dynamically and run CICD
 // MongoDB
 var db;
 var collection;
