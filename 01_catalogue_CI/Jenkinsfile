@@ -33,7 +33,8 @@ pipeline {
         }
         stage('Install dependencies') {
             steps {     //Shell commands in pipeline. To run the below command Node Js should be installed in agent.
-                sh """   
+                sh """  
+                    cd 01_catalogue_CI 
                     npm install  
                 """
             }
