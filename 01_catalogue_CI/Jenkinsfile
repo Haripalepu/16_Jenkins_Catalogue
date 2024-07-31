@@ -1,9 +1,9 @@
 //Angent should have Java,Terrafrom,Aws cli,node js
 //The below stages are for Continues Integration process
 //Stage-01 Get the version of the aplication.While doing the developments the application version will change (package.json file line no 3)
-//Stage-02 Install Dependencies 
-//Stage-03 Build i.e Zip all files(16_Jenkins_Catalogues) and create artifact
-//Stage-04 Push Artifact to Nexus Repo
+//Stage-02 Install Dependencies.
+//Stage-03 Build i.e Zip all files(16_Jenkins_Catalogues) and create artifact.
+//Stage-04 Push Artifact to Nexus Repo.
 //Stage-05 Deploy. To pass the version & environmnet to the downstreat server.
 
 pipeline {
